@@ -1,0 +1,41 @@
+{% extends "base.html" %}
+{% block content %}
+{% if warnings %}
+<div class="alert">
+  <ul>{% for w in warnings %}<li>{{ w }}</li>{% endfor %}</ul>
+</div>
+{% endif %}
+<div class="result-actions">
+  <a class="button" href="{{ download_href }}" download="{{ filename }}">엑셀 다운로드</a>
+  <a class="button secondary" href="/">다시 검색</a>
+</div>
+<div class="table-wrap">
+<table>
+  <thead>
+    <tr>{% for c in columns %}<th>{{ c }}</th>{% endfor %}</tr>
+  </thead>
+  <tbody>
+    {% set ns = namespace(prev_year=None) %}
+    {% for row in rows %}
+      {% if row['연도'] != ns.prev_year %}
+      <tr class="year-header"><td colspan="{{ columns|length }}">{{ row['연도'] }}년</td></tr>
+      {% set ns.prev_year = row['연도'] %}
+      {% endif %}
+    <tr>
+      {% for c in columns %}
+      <td>
+        {% set v = row[c] %}
+        {% if v is none %}-
+        {% elif c in ("회사명", "연도") %}{{ v }}
+        {% elif "증감률" in c %}{{ "%+.2f"|format(v) }}
+        {% elif c.endswith("(%)") %}{{ "%.2f"|format(v) }}
+        {% else %}{{ "%.2f"|format(v) }}
+        {% endif %}
+      </td>
+      {% endfor %}
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+</div>
+{% endblock %}

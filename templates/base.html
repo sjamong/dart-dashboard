@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>{% block title %}재무제표 비교 분석기{% endblock %}</title>
+<link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+<div class="container">
+  <header>
+    <h1><a href="/">재무제표 비교 분석기</a></h1>
+    <p class="subtitle">회사명으로 검색해 최대 3개 기업의 최근 3개년 재무제표를 비교합니다 (OpenDART 기반)</p>
+  </header>
+  <main>
+    {% block content %}{% endblock %}
+  </main>
+  <footer>
+    <p>데이터 출처: <a href="https://opendart.fss.or.kr" target="_blank" rel="noopener">OpenDART</a></p>
+  </footer>
+</div>
+</body>
+</html>

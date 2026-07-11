@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+{% block content %}
+{% if errors %}
+<div class="alert">
+  <ul>
+  {% for e in errors %}<li>{{ e }}</li>{% endfor %}
+  </ul>
+</div>
+{% endif %}
+<form method="post" action="/compare" class="search-form">
+  <label>
+    기준 연도 (사업보고서 기준)
+    <input type="number" name="year" value="{{ year }}" placeholder="예: 2024" required>
+  </label>
+
+  {% for i in range(1, 4) %}
+  <div class="company-field" data-idx="{{ i }}">
+    <label>비교할 회사 {{ i }}</label>
+    <input type="text" class="company-input" name="name{{ i }}" value="{{ names[i-1] }}" autocomplete="off" placeholder="회사명 입력 (예: 삼성전자)" required>
+    <input type="hidden" class="company-code" name="code{{ i }}" value="">
+    <input type="hidden" class="company-corpname" name="corpname{{ i }}" value="">
+    <ul class="suggestions"></ul>
+  </div>
+  {% endfor %}
+
+  <button type="submit">비교하기</button>
+</form>
+<script src="/static/app.js"></script>
+{% endblock %}

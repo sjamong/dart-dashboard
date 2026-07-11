@@ -1,0 +1,6 @@
+.env
+corp_code_cache.json
+*.xlsx
+__pycache__/
+.vercel/
+uvicorn.log

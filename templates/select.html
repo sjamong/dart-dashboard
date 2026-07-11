@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+{% block content %}
+<p>이름이 같은 회사가 여러 건 검색됐습니다. 각 항목에서 정확한 회사를 선택해주세요.</p>
+<form method="post" action="/compare">
+  <input type="hidden" name="year" value="{{ year }}">
+  {% for s in slots %}
+    {% if s.status == "resolved" %}
+      <input type="hidden" name="name{{ s.idx }}" value="{{ s.name }}">
+      <input type="hidden" name="code{{ s.idx }}" value="{{ s.code }}">
+      <input type="hidden" name="corpname{{ s.idx }}" value="{{ s.name }}">
+      <p class="resolved">회사 {{ s.idx }}: <strong>{{ s.name }}</strong> (확인됨)</p>
+    {% else %}
+      <fieldset>
+        <legend>회사 {{ s.idx }} — '{{ s.name }}' 검색 결과</legend>
+        <input type="hidden" name="name{{ s.idx }}" value="{{ s.name }}">
+        {% for m in s.matches %}
+        <label class="radio-option">
+          <input type="radio" name="code{{ s.idx }}" value="{{ m.corp_code }}" data-name="{{ m.corp_name }}" required>
+          {{ m.corp_name }}
+          {% if m.stock_code %}<span class="tag">상장 {{ m.stock_code }}</span>{% else %}<span class="tag muted">비상장</span>{% endif %}
+        </label>
+        {% endfor %}
+        <input type="hidden" class="corpname-hidden" name="corpname{{ s.idx }}" value="">
+      </fieldset>
+    {% endif %}
+  {% endfor %}
+  <button type="submit">선택 완료</button>
+</form>
+<script>
+document.querySelectorAll("fieldset").forEach(function (fs) {
+  var hidden = fs.querySelector(".corpname-hidden");
+  fs.querySelectorAll("input[type=radio]").forEach(function (radio) {
+    radio.addEventListener("change", function () {
+      hidden.value = radio.dataset.name;
+    });
+  });
+});
+</script>
+{% endblock %}
